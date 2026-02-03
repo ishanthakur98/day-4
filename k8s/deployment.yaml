@@ -18,35 +18,17 @@ spec:
     metadata:
       labels:
         app: demo-app
-        version: v3
+        version: v4-broken
     spec:
       containers:
       - name: app
-        image: nginx:1.25-alpine
+        image: nginx:nonexistent-tag
         ports:
         - containerPort: 80
-        env:
-        - name: VERSION
-          value: "3.0.0"
         resources:
           requests:
             cpu: 50m
             memory: 64Mi
-          limits:
-            cpu: 100m
-            memory: 128Mi
-        readinessProbe:
-          httpGet:
-            path: /
-            port: 80
-          initialDelaySeconds: 3
-          periodSeconds: 3
-        livenessProbe:
-          httpGet:
-            path: /
-            port: 80
-          initialDelaySeconds: 10
-          periodSeconds: 5
         volumeMounts:
         - name: html
           mountPath: /usr/share/nginx/html
@@ -63,18 +45,6 @@ data:
   index.html: |
     <!DOCTYPE html>
     <html>
-    <head><title>ArgoCD Demo</title></head>
-    <body style="font-family: Arial; margin: 50px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white;">
-      <div style="background: rgba(255,255,255,0.1); padding: 40px; border-radius: 10px;">
-        <h1>🚀 Deployed via ArgoCD</h1>
-        <p><strong>Version:</strong> 3.0.0</p>
-        <p><strong>Deployment:</strong> Rolling Update Strategy</p>
-        <p>This deployment uses controlled rolling updates with health checks.</p>
-        <ul style="text-align: left;">
-          <li>maxSurge: 2 (can temporarily have 8 pods)</li>
-          <li>maxUnavailable: 1 (minimum 5 pods always running)</li>
-          <li>Readiness probe ensures traffic only to ready pods</li>
-        </ul>
-      </div>
-    </body>
+    <head><title>Broken</title></head>
+    <body><h1>This won't deploy</h1></body>
     </html>

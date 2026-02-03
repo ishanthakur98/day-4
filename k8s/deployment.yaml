@@ -20,7 +20,7 @@ spec:
         - containerPort: 80
         env:
         - name: VERSION
-          value: "1.0.0"
+          value: "2.0.0"
         volumeMounts:
         - name: html
           mountPath: /usr/share/nginx/html
@@ -70,12 +70,12 @@ data:
     <!DOCTYPE html>
     <html>
     <head><title>Blue-Green Demo</title></head>
-    <body style="font-family: Arial; margin: 50px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+    <body style="font-family: Arial; margin: 50px; background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white;">
       <div style="background: rgba(255,255,255,0.1); padding: 40px; border-radius: 10px;">
-        <h1>🔵 Blue Deployment (Active)</h1>
-        <p><strong>Version:</strong> 1.0.0</p>
+        <h1>🟢 Green Deployment (Preview)</h1>
+        <p><strong>Version:</strong> 2.0.0</p>
         <p><strong>Strategy:</strong> Blue-Green with Argo Rollouts</p>
-        <p>This is the ACTIVE (production) version.</p>
+        <p>This is the PREVIEW (staging) version - not yet active.</p>
       </div>
     </body>
     </html>

@@ -41,7 +41,7 @@ metadata:
 spec:
   type: NodePort
   selector:
-    app: demo-app
+    app: bluegreen-demo
   ports:
   - protocol: TCP
     port: 80

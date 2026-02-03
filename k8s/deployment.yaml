@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: app
-        image: nginx:1.25-alpine-nw
+        image: nginx:1.25-alpine
         ports:
         - containerPort: 80
         env:
@@ -66,8 +66,15 @@ data:
     <head><title>ArgoCD Demo</title></head>
     <body style="font-family: Arial; margin: 50px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white;">
       <div style="background: rgba(255,255,255,0.1); padding: 40px; border-radius: 10px;">
-        <h1>🚀 Not working</h1>
-        
+        <h1>🚀 Deployed via ArgoCD</h1>
+        <p><strong>Version:</strong> 3.0.0</p>
+        <p><strong>Deployment:</strong> Rolling Update Strategy</p>
+        <p>This deployment uses controlled rolling updates with health checks.</p>
+        <ul style="text-align: left;">
+          <li>maxSurge: 2 (can temporarily have 8 pods)</li>
+          <li>maxUnavailable: 1 (minimum 5 pods always running)</li>
+          <li>Readiness probe ensures traffic only to ready pods</li>
+        </ul>
       </div>
     </body>
     </html>

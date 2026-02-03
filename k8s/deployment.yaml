@@ -5,7 +5,7 @@ metadata:
   labels:
     app: demo-app
 spec:
-  replicas: 3
+  replicas: 5
   selector:
     matchLabels:
       app: demo-app
@@ -13,7 +13,7 @@ spec:
     metadata:
       labels:
         app: demo-app
-        version: v1
+        version: v2
     spec:
       containers:
       - name: app
@@ -22,7 +22,7 @@ spec:
         - containerPort: 80
         env:
         - name: VERSION
-          value: "1.0.0"
+          value: "2.0.0"
         resources:
           requests:
             cpu: 50m
@@ -47,12 +47,13 @@ data:
     <!DOCTYPE html>
     <html>
     <head><title>ArgoCD Demo</title></head>
-    <body style="font-family: Arial; margin: 50px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+    <body style="font-family: Arial; margin: 50px; background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white;">
       <div style="background: rgba(255,255,255,0.1); padding: 40px; border-radius: 10px;">
         <h1>🚀 Deployed via ArgoCD</h1>
-        <p><strong>Version:</strong> 1.0.0</p>
-        <p><strong>Deployment:</strong> Blue (Stable)</p>
+        <p><strong>Version:</strong> 2.0.0</p>
+        <p><strong>Deployment:</strong> Green (Updated)</p>
         <p>This application is automatically deployed from Git!</p>
+        <p><em>Changed: Replicas 3→5, Version 1.0.0→2.0.0</em></p>
       </div>
     </body>
     </html>

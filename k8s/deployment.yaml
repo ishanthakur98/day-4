@@ -1,24 +1,17 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
 metadata:
-  name: demo-app
-  labels:
-    app: demo-app
+  name: bluegreen-demo
 spec:
-  replicas: 6
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxSurge: 2
-      maxUnavailable: 1
+  replicas: 3
+  revisionHistoryLimit: 2
   selector:
     matchLabels:
-      app: demo-app
+      app: bluegreen-demo
   template:
     metadata:
       labels:
-        app: demo-app
-        version: v3
+        app: bluegreen-demo
     spec:
       containers:
       - name: app
@@ -27,54 +20,62 @@ spec:
         - containerPort: 80
         env:
         - name: VERSION
-          value: "3.0.0"
-        resources:
-          requests:
-            cpu: 50m
-            memory: 64Mi
-          limits:
-            cpu: 100m
-            memory: 128Mi
-        readinessProbe:
-          httpGet:
-            path: /
-            port: 80
-          initialDelaySeconds: 3
-          periodSeconds: 3
-        livenessProbe:
-          httpGet:
-            path: /
-            port: 80
-          initialDelaySeconds: 10
-          periodSeconds: 5
+          value: "1.0.0"
         volumeMounts:
         - name: html
           mountPath: /usr/share/nginx/html
       volumes:
       - name: html
         configMap:
-          name: demo-app-html
+          name: bluegreen-html
+  strategy:
+    blueGreen:
+      activeService: bluegreen-active
+      previewService: bluegreen-preview
+      autoPromotionEnabled: false
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-app
+spec:
+  type: NodePort
+  selector:
+    app: demo-app
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+    nodePort: 30080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bluegreen-preview
+spec:
+  type: LoadBalancer
+  selector:
+    app: bluegreen-demo
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: demo-app-html
+  name: bluegreen-html
 data:
   index.html: |
     <!DOCTYPE html>
     <html>
-    <head><title>ArgoCD Demo</title></head>
-    <body style="font-family: Arial; margin: 50px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white;">
+    <head><title>Blue-Green Demo</title></head>
+    <body style="font-family: Arial; margin: 50px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
       <div style="background: rgba(255,255,255,0.1); padding: 40px; border-radius: 10px;">
-        <h1>🚀 Deployed via ArgoCD</h1>
-        <p><strong>Version:</strong> 3.0.0</p>
-        <p><strong>Deployment:</strong> Rolling Update Strategy</p>
-        <p>This deployment uses controlled rolling updates with health checks.</p>
-        <ul style="text-align: left;">
-          <li>maxSurge: 2 (can temporarily have 8 pods)</li>
-          <li>maxUnavailable: 1 (minimum 5 pods always running)</li>
-          <li>Readiness probe ensures traffic only to ready pods</li>
-        </ul>
+        <h1>🔵 Blue Deployment (Active)</h1>
+        <p><strong>Version:</strong> 1.0.0</p>
+        <p><strong>Strategy:</strong> Blue-Green with Argo Rollouts</p>
+        <p>This is the ACTIVE (production) version.</p>
       </div>
     </body>
     </html>

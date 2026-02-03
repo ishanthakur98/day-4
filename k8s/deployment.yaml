@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: app
-        image: nginx:1.25-alpine-bad
+        image: nginx:1.25-alpine
         ports:
         - containerPort: 80
         env:
